@@ -9,7 +9,7 @@ namespace SocketServer {
         static void Main(string[] argvs) {
             // expected to have at least 1 input
             if(argvs.Length != 1) {
-                Console.WriteLine("invalid input");
+                Console.WriteLine("Expect one input:\n The port number");
                 return;
             }
             
@@ -18,19 +18,21 @@ namespace SocketServer {
                 int port = int.Parse(argvs[0]);
                 ExecuteServer(port);
             } catch(Exception e) {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine("Invalid port number...");
                 return;
             }
         }
         
         public static void ExecuteServer(int port) {
             // get local IP address
-            IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddr = ipHost.AddressList[0];
+            // IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
+            // IPAddress ipAddr = ipHost.AddressList[0];
+            
+            // listen to all addresses
+            IPAddress ipAddr = IPAddress.Parse("0.0.0.0");
             
             // create local endpoint
             IPEndPoint localEndPoint = new IPEndPoint(ipAddr, port);
-            Console.WriteLine(ipAddr.ToString());
             
             // create a new instance of the socket
             Socket listener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -66,6 +68,7 @@ namespace SocketServer {
                 }
                 
             } catch(Exception e) {
+                Console.WriteLine("Connection error...")
                 Console.WriteLine(e.ToString());
             }
         }

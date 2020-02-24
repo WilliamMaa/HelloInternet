@@ -8,7 +8,7 @@ namespace SocketClient {
         static void Main(string[] argvs) {
             // expected to have two input
             if(argvs.Length != 2) {
-                Console.WriteLine("invalid input");
+                Console.WriteLine("Invalid input, expecting two inputs:\n The IP address\n The port number");
                 return;
             }
             client(argvs[0], argvs[1]);
@@ -22,12 +22,23 @@ namespace SocketClient {
                 port_int = int.Parse(port);
             }
             catch(Exception e) {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine("Invalid Port Number...\n");
+                // Console.WriteLine(e.ToString());
+                return;
             }
             
             // this parse might cause an error if input IP address is invalid
-            IPEndPoint ServerEndPoint = new IPEndPoint(IPAddress.Parse(ipaddress), port_int);
-            
+            IPAddress ip_address = null;
+            IPEndPoint ServerEndPoint = null;
+            try {
+                ip_address = IPAddress.Parse(ipaddress);
+                ServerEndPoint = new IPEndPoint(ip_address, port_int);
+            } catch(FormatException e) {
+                Console.WriteLine("Invalid IP address...\n");
+                // Console.WriteLine(e.ToString());
+                return;
+            }
+
             // create a new instance of the socket
             Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             
@@ -50,7 +61,9 @@ namespace SocketClient {
                 ClientSocket.Close();
                 
             } catch(Exception e) {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine("Connection error...");
+                // Console.WriteLine(e.ToString());
+                return;
             }
         }
     }
